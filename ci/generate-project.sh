@@ -8,7 +8,7 @@ mkdir -p `pwd`/boot-project/assets
 
 BOOT_VERSION=`cat spring-boot/version`
 
-url="https://start.spring.io/starter.tgz?"
+url="https://start.spring.io/starter.zip?"
 url="${url}bootVersion=${BOOT_VERSION}&name=docker-image"
 url="${url}&artifactId=com.ecsteam&type=maven-project&packaging=jar"
 
