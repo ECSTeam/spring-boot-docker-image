@@ -1,0 +1,36 @@
+---
+resource_types:
+- name: github-tags
+  type: docker-image
+  source:
+    repository: ecsteam/github-tags-resource
+resources:
+- name: source
+  type: git
+  source:
+    uri: git@github.com:ECSTeam/spring-boot-docker-image.git
+    private_key: {{github-private-key}}
+- name: spring-boot
+  type: github-tags
+  source:
+    user: spring-projects
+    repository: spring-boot
+- name: docker-hub
+  type: docker-image
+  source:
+    repository: ecsteam/spring-boot
+    email: { {docker-hub-email}}
+    username: { {docker-hub-username}}
+    password: { { docker-hub-password}}
+
+jobs:
+- name: generate-project
+  public: true
+  plan:
+  - aggregate:
+    - get: spring-boot
+      trigger: true
+    - get: source
+      trigger: true
+  - task: spring-initializr
+    file: source/ci/generate-project.yml
