@@ -1,6 +1,7 @@
 #!/bin/sh
 
-set -e -x
+set -eu
+
 apk --no-cache add wget jq
 
 mkdir -p `pwd`/boot-project/assets
@@ -14,5 +15,5 @@ url="${url}&artifactId=com.ecsteam&type=maven-project&packaging=jar"
 dependencies=`wget --no-check-certificate -O - "https://start.spring.io/dependencies?bootVersion=${BOOT_VERSION}" | jq -r '.dependencies | keys[]' | xargs | tr ' ' ','`
 url="${url}&dependencies=${dependencies}"
 
-wget -O `pwd`/boot-project/assets/package.zip "${url}"
+wget --no-check-certificate -O `pwd`/boot-project/assets/package.zip "${url}"
 cp `pwd`/source/Dockerfile `pwd`/boot-project
