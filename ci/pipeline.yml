@@ -38,5 +38,5 @@ jobs:
   - put: docker-hub
     params:
       build: boot-project
-      tag: spring-boot/version
+      tag: spring-boot/tag
       tag_as_latest: true
