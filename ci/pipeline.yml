@@ -35,3 +35,8 @@ jobs:
       trigger: true
   - task: spring-initializr
     file: source/ci/generate-project.yml
+  - put: docker-hub
+    params:
+      build: boot-project
+      tag: spring-boot/version
+      tag_as_latest: true

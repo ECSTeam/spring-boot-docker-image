@@ -8,5 +8,7 @@ image_resource:
 inputs:
 - name: spring-boot
 - name: source
+outputs:
+- name: boot-project
 run:
   path: source/ci/generate-project.sh

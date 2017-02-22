@@ -1,6 +1,6 @@
 FROM openjdk:8-jdk-alpine
 
-ADD assets/ /root
+ADD assets/package.zip /root/package.zip
 
 RUN unzip /root/package.zip
 RUN /root/mvnw dependency:go-offline
