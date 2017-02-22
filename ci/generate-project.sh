@@ -12,7 +12,7 @@ url="https://start.spring.io/starter.zip?"
 url="${url}bootVersion=${BOOT_VERSION}&name=docker-image"
 url="${url}&artifactId=com.ecsteam&type=maven-project&packaging=jar"
 
-dependencies=`wget --no-check-certificate -O - "https://start.spring.io/dependencies?bootVersion=${BOOT_VERSION}" | jq -r '.dependencies | keys[]' | xargs | tr ' ' ','`
+dependencies=`wget --no-check-certificate -O - "https://start.spring.io/dependencies?bootVersion=${BOOT_VERSION}" | jq -r '.dependencies | keys[]' | grep -v 'cloud-cluster' | grep -v 'data-mongodb-reactive' | xargs | tr ' ' ','`
 url="${url}&dependencies=${dependencies}"
 
 wget --no-check-certificate -O `pwd`/boot-project/assets/package.zip "${url}"
