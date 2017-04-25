@@ -4,6 +4,12 @@ resource_types:
   type: docker-image
   source:
     repository: ecsteam/github-tags-resource
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
+
 resources:
 - name: source
   type: git
@@ -23,6 +29,10 @@ resources:
     email: {{docker-hub-email}}
     username: {{docker-hub-username}}
     password: {{docker-hub-password}}
+- name: notify
+  type: slack-notification
+  source:
+    url: {{slack-webhook-url}}
 
 jobs:
 - name: generate-project
@@ -40,3 +50,26 @@ jobs:
       build: boot-project
       tag: spring-boot/tag
       tag_as_latest: true
+  on_failure:
+    do:
+    - put: notify
+      params:
+        channel: "#topic-pipeline-alerts"
+        username: concourse
+        text: |
+          :thumbsdown: Job $BUILD_JOB_NAME failed!
+
+          Job details: <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME>
+
+  on_success: 
+    do:
+    - put: notify
+      params:
+        channel: "#topic-pipeline-alerts"
+        username: concourse
+        text_file: version/number
+        text: |
+          :thumbsup: A new version of $BUILD_JOB_NAME has been built.
+
+          Release: <https://github.com/ECSTeam/$BUILD_JOB_NAME/releases/v$TEXT_FILE_CONTENT>
+          Job: <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME>
